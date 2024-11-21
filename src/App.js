@@ -6,6 +6,8 @@ import { Signup } from "./Features/auth/components/Signup";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./Pages/Home";
 import Logout from "./Features/auth/components/Logout";
+import ProtectedAdmin from "./Features/auth/components/ProtectedAdmin";
+import AdminHome from "./Features/admin/AdminHome";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +29,14 @@ const router = createBrowserRouter([
   {
     path: "/logout",
     element: <Logout></Logout>,
+  },
+  {
+    path: "/admin",
+    element: (
+      <ProtectedAdmin>
+        <AdminHome></AdminHome>
+      </ProtectedAdmin>
+    ),
   },
 ]);
 

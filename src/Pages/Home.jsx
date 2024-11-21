@@ -6,9 +6,8 @@ import AdminPanel from "../Features/Components/AdminPanel";
 function Home() {
   return (
     <div>
-      <Navbar>
-        <AdminPanel></AdminPanel>
-      </Navbar>
+      <Navbar></Navbar>
+      Home
     </div>
   );
 }

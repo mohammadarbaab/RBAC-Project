@@ -6,6 +6,23 @@
       "password": "Sufiya@321",
       "addresses": [],
       "role": "user"
+    },
+    {
+      "id": "73d8",
+      "email": "admin@gmail.com",
+      "password": "Admin@321",
+      "addresses": [
+        {
+          "name": "adminnn",
+          "email": "admin",
+          "city": "admin",
+          "state": "admin",
+          "pinCode": "212121",
+          "phone": "98989898",
+          "street": "admin"
+        }
+      ],
+      "role": "admin"
     }
   ]
 }
