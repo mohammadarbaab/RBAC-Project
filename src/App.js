@@ -7,7 +7,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./Pages/Home";
 import Logout from "./Features/auth/components/Logout";
 import ProtectedAdmin from "./Features/auth/components/ProtectedAdmin";
-import AdminHome from "./Features/admin/AdminHome";
+import AdminHome from "./Features/admin/components/AdminHome";
+import Navbar from "./Features/Navbar/Navbar";
+import GlobalLayout from "./Pages/GlobleLayout";
 
 const router = createBrowserRouter([
   {
@@ -42,8 +44,10 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <div>
+    <div className="px-4">
+      <GlobalLayout>
       <RouterProvider router={router} />
+      </GlobalLayout>
     </div>
   );
 }

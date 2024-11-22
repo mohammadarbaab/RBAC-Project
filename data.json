@@ -1,28 +1,50 @@
 {
   "users": [
     {
-      "id": "5d9e",
+      "id": "e7dc",
+      "email": "admin@gmail.com",
+      "password": "Admin@321",
+      "addresses": [],
+      "role": "admin"
+    },
+    {
+      "id": "76f8",
       "email": "kazmiwrite@gmail.com",
       "password": "Sufiya@321",
       "addresses": [],
       "role": "user"
+    }
+  ],
+  "employe": [
+    {
+      "id": "2",
+      "name": "fiyya",
+      "email": "fiyaa@gmail.com",
+      "role": "user"
     },
     {
-      "id": "73d8",
-      "email": "admin@gmail.com",
-      "password": "Admin@321",
-      "addresses": [
-        {
-          "name": "adminnn",
-          "email": "admin",
-          "city": "admin",
-          "state": "admin",
-          "pinCode": "212121",
-          "phone": "98989898",
-          "street": "admin"
-        }
-      ],
+      "id": "9093",
+      "name": "jon",
+      "email": "jon@gmail.com",
+      "role": "user"
+    },
+    {
+      "id": "5da0",
+      "name": "naaaa",
+      "email": "naah@gmail.com",
       "role": "admin"
+    },
+    {
+      "id": "7f08",
+      "name": "aman",
+      "email": "aman@gmail.com",
+      "role": "user"
+    },
+    {
+      "id": "08ed",
+      "name": "aalam",
+      "email": "aalam@gmail.com",
+      "role": "user"
     }
   ]
 }
