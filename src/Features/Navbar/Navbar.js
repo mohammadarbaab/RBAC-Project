@@ -56,11 +56,7 @@ export default function Navbar() {
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
               <Link to="/">
-                <img
-                  alt="Your Company"
-                  src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
-                  className="h-8 w-auto"
-                />
+                <h2 className="text-xl font-bold text-gray-800 tracking-wide bg-gradient-to-r from-purple-400 to-indigo-600 text-transparent bg-clip-text">User Data List</h2>
               </Link>
             </div>
           </div>

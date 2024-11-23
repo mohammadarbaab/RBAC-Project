@@ -22,7 +22,7 @@ function UserLists() {
   return (
     <div className="p-6 min-h-screen">
       <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
-        User List
+        Employees
       </h1>
 
       {/* Display the user list */}

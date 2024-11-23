@@ -95,47 +95,51 @@ function UserManagement() {
         <p className="text-center text-red-500 mt-4">Error: {error}</p>
       )}
 
-      <table className="mt-6 w-full table-auto border-collapse border border-gray-200">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-              Name
-            </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-              Email
-            </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-              Role
-            </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id} className="border-b hover:bg-gray-50">
-              <td className="px-6 py-4 text-sm text-gray-700">{user.name}</td>
-              <td className="px-6 py-4 text-sm text-gray-700">{user.email}</td>
-              <td className="px-6 py-4 text-sm text-gray-700">{user.role}</td>
-              <td className="px-6 py-4 text-sm">
+      <div className="overflow-x-auto mt-6">
+    <table className="w-full table-auto border-collapse border border-gray-200">
+      <thead className="bg-gray-100">
+        <tr>
+          <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+            Name
+          </th>
+          <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+            Email
+          </th>
+          <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+            Role
+          </th>
+          <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {users.map((user) => (
+          <tr key={user.id} className="border-b hover:bg-gray-50">
+            <td className="px-6 py-4 text-sm text-gray-700">{user.name}</td>
+            <td className="px-6 py-4 text-sm text-gray-700">{user.email}</td>
+            <td className="px-6 py-4 text-sm text-gray-700">{user.role}</td>
+            <td className="px-6 py-4 text-sm">
+              <div className="flex flex-col sm:flex-row sm:space-x-2">
                 <button
                   onClick={() => handleEdit(user)}
-                  className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 w-full sm:w-auto mb-2 sm:mb-0"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(user.id)}
-                  className="ml-2 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+                  className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-auto"
                 >
                   Delete
                 </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </div>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
     </div>
   );
 }

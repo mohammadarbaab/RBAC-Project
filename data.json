@@ -17,14 +17,8 @@
   ],
   "employe": [
     {
-      "id": "2",
-      "name": "fiyya",
-      "email": "fiyaa@gmail.com",
-      "role": "user"
-    },
-    {
       "id": "9093",
-      "name": "jon",
+      "name": "jonh",
       "email": "jon@gmail.com",
       "role": "user"
     },
@@ -32,6 +26,12 @@
       "id": "5da0",
       "name": "naaaazi",
       "email": "naah@gmail.com",
+      "role": "admin"
+    },
+    {
+      "id": "f06d",
+      "name": "arbaab",
+      "email": "arbaab@gmail.com",
       "role": "admin"
     }
   ]
