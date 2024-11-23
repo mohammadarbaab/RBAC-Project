@@ -1,3 +1,2353 @@
+ <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {/* Previous Button */}
+      <button
+        onClick={() => handlePagination(currentPage - 1)}
+        disabled={currentPage === 1}
+        style={{
+          margin: "5px",
+          backgroundColor: currentPage === 1 ? "lightgray" : "gray",
+          color: "white",
+          border: "none",
+          padding: "5px 10px",
+          cursor: currentPage === 1 ? "not-allowed" : "pointer",
+        }}
+      >
+        Prev
+      </button>
+
+      {/* Page Info */}
+      <span
+        style={{
+          margin: "0 10px",
+          fontSize: "16px",
+          color: "black",
+        }}
+      >
+        Page {currentPage} of {totalPages}
+      </span>
+
+      {/* Next Button */}
+      <button
+        onClick={() => handlePagination(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        style={{
+          margin: "5px",
+          backgroundColor: currentPage === totalPages ? "lightgray" : "gray",
+          color: "white",
+          border: "none",
+          padding: "5px 10px",
+          cursor: currentPage === totalPages ? "not-allowed" : "pointer",
+        }}
+      >
+        Next
+      </button>
+    </div>
+ 
+
+  products,
+  itemsPerPage,
+ 
+
+  // Total pages calculation
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+ 
+export default function Pagination({ totalItems, itemsPerPage, currentPage, paginate }) {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+  
+    return (
+      <div className="flex justify-center items-center mt-6 space-x-4">
+        <button
+          onClick={() => paginate(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400"
+        >
+          Previous
+        </button>
+        <span className="text-lg font-medium">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => paginate(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400"
+        >
+          Next
+        </button>
+      </div>
+    );
+  }
+  
+ 
+filteredUsers
+ 
+filteredUsers
+ 
+e) => setSearchQuery(e.target.value)
+ 
+
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [filteredUsers, setFilteredUsers] = useState(users); // State for filtered users list
+ 
+./Pagination
+ 
+export default function Pagination({ totalItems, itemsPerPage, currentPage, paginate }) {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+  
+    return (
+      <div className="flex justify-center items-center mt-6 space-x-4">
+        <button
+          onClick={() => paginate(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400"
+        >
+          Previous
+        </button>
+        <span className="text-lg font-medium">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => paginate(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400"
+        >
+          Next
+        </button>
+      </div>
+    );
+  }
+  
+ 
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllUsersAsync,
+  selectAllUserLists,
+} from "../UsersLists/components/userListsSlice"; // Import your slice actions and selector
+
+function UserLists() {
+  const dispatch = useDispatch();
+  const users = useSelector(selectAllUserLists); // Get users list from Redux state
+  const status = useSelector((state) => state.userLists.status); // To handle loading state
+  const error = useSelector((state) => state.userLists.error); // To handle error state
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [filteredUsers, setFilteredUsers] = useState(users); // State for filtered users list
+
+
+
+
+  // pagination code 
+  
+  
+  // Fetch users on component mount
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchAllUsersAsync()); // Dispatch the async thunk to fetch users
+    }
+  }, [dispatch, status]);
+
+  // Filter users based on search query
+  useEffect(() => {
+    if (searchQuery === "") {
+      setFilteredUsers(users); // If no search query, show all users
+    } else {
+      setFilteredUsers(
+        users.filter((user) =>
+          user.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      ); // Filter users by name
+    }
+  }, [searchQuery, users]);
+
+  return (
+    <div className="p-8 min-h-screen">
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+        Employees
+      </h1>
+
+      {/* Search Bar */}
+      <div className="mb-6 max-w-md mx-auto">
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"
+        />
+      </div>
+
+      {/* Display the user list */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8 mx-auto max-w-6xl">
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <div
+              key={user.id}
+              className="relative bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+              style={{
+                borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1", // Gradient border effect
+              }}
+            >
+              {/* Status Badge */}
+              <div
+                className={`absolute top-4 right-4 px-4 py-1 text-xs font-medium uppercase rounded-full ${
+                  user.status === "active"
+                    ? "bg-green-200 text-green-800 shadow-md"
+                    : "bg-red-200 text-red-800 shadow-md"
+                }`}
+              >
+                {user.status === "active" ? "Active" : "Inactive"}
+              </div>
+
+              {/* Avatar and Name */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold text-2xl shadow-md">
+                  {user.name[0].toUpperCase()}
+                </div>
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  {user.name}
+                </h2>
+              </div>
+
+              {/* Details */}
+              <div className="text-gray-600 text-sm space-y-2">
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">badge</span>
+                  {user.id}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">email</span>
+                  {user.email}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">person</span>
+                  {user.role}
+                </p>
+              </div>
+
+              {/* Permissions */}
+              <div className="mt-4">
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                  Permissions
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {user.permissions && user.permissions.length > 0 ? (
+                    user.permissions.map((permission, index) => (
+                      <span
+                        key={index}
+                        className="px-4 py-1 text-sm font-medium text-white bg-blue-500 rounded-full transition-all duration-200 ease-in-out hover:bg-blue-600 cursor-pointer"
+                      >
+                        {permission}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="px-4 py-1 text-sm font-medium text-white bg-gray-400 rounded-full">
+                      No Permissions
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-600 col-span-full">
+            No users found
+          </p>
+        )}
+      </div>
+
+    </div>
+  );
+}
+
+export default UserLists;
+
+ 
+export default function Pagination({ totalItems, itemsPerPage, currentPage, paginate }) {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+  
+    return (
+      <div className="flex justify-center items-center mt-6 space-x-4">
+        <button
+          onClick={() => paginate(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400"
+        >
+          Previous
+        </button>
+        <span className="text-lg font-medium">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => paginate(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400"
+        >
+          Next
+        </button>
+      </div>
+    );
+  }
+  
+ 
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllUsersAsync,
+  selectAllUserLists,
+} from "../UsersLists/components/userListsSlice"; // Import your slice actions and selector
+
+function UserLists() {
+  const dispatch = useDispatch();
+  const users = useSelector(selectAllUserLists); // Get users list from Redux state
+  const status = useSelector((state) => state.userLists.status); // To handle loading state
+  const error = useSelector((state) => state.userLists.error); // To handle error state
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [filteredUsers, setFilteredUsers] = useState(users); // State for filtered users list
+
+
+
+
+  // pagination code 
+  
+  
+  // Fetch users on component mount
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchAllUsersAsync()); // Dispatch the async thunk to fetch users
+    }
+  }, [dispatch, status]);
+
+  // Filter users based on search query
+  useEffect(() => {
+    if (searchQuery === "") {
+      setFilteredUsers(users); // If no search query, show all users
+    } else {
+      setFilteredUsers(
+        users.filter((user) =>
+          user.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      ); // Filter users by name
+    }
+  }, [searchQuery, users]);
+
+  return (
+    <div className="p-8 min-h-screen">
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+        Employees
+      </h1>
+
+      {/* Search Bar */}
+      <div className="mb-6 max-w-md mx-auto">
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"
+        />
+      </div>
+
+      {/* Display the user list */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8 mx-auto max-w-6xl">
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <div
+              key={user.id}
+              className="relative bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+              style={{
+                borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1", // Gradient border effect
+              }}
+            >
+              {/* Status Badge */}
+              <div
+                className={`absolute top-4 right-4 px-4 py-1 text-xs font-medium uppercase rounded-full ${
+                  user.status === "active"
+                    ? "bg-green-200 text-green-800 shadow-md"
+                    : "bg-red-200 text-red-800 shadow-md"
+                }`}
+              >
+                {user.status === "active" ? "Active" : "Inactive"}
+              </div>
+
+              {/* Avatar and Name */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold text-2xl shadow-md">
+                  {user.name[0].toUpperCase()}
+                </div>
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  {user.name}
+                </h2>
+              </div>
+
+              {/* Details */}
+              <div className="text-gray-600 text-sm space-y-2">
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">badge</span>
+                  {user.id}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">email</span>
+                  {user.email}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">person</span>
+                  {user.role}
+                </p>
+              </div>
+
+              {/* Permissions */}
+              <div className="mt-4">
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                  Permissions
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {user.permissions && user.permissions.length > 0 ? (
+                    user.permissions.map((permission, index) => (
+                      <span
+                        key={index}
+                        className="px-4 py-1 text-sm font-medium text-white bg-blue-500 rounded-full transition-all duration-200 ease-in-out hover:bg-blue-600 cursor-pointer"
+                      >
+                        {permission}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="px-4 py-1 text-sm font-medium text-white bg-gray-400 rounded-full">
+                      No Permissions
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-600 col-span-full">
+            No users found
+          </p>
+        )}
+      </div>
+
+    </div>
+  );
+}
+
+export default UserLists;
+
+ 
+./Paginatio
+ 
+export default function Pagination({ totalItems, itemsPerPage, currentPage, paginate }) {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+  
+    return (
+      <div className="flex justify-center items-center mt-6 space-x-4">
+        <button
+          onClick={() => paginate(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400"
+        >
+          Previous
+        </button>
+        <span className="text-lg font-medium">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => paginate(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400"
+        >
+          Next
+        </button>
+      </div>
+    );
+  }
+  
+ 
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllUsersAsync,
+  selectAllUserLists,
+} from "../UsersLists/components/userListsSlice"; // Import your slice actions and selector
+
+function UserLists() {
+  const dispatch = useDispatch();
+  const users = useSelector(selectAllUserLists); // Get users list from Redux state
+  const status = useSelector((state) => state.userLists.status); // To handle loading state
+  const error = useSelector((state) => state.userLists.error); // To handle error state
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [filteredUsers, setFilteredUsers] = useState(users); // State for filtered users list
+
+
+
+
+  // pagination code 
+  
+  
+  // Fetch users on component mount
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchAllUsersAsync()); // Dispatch the async thunk to fetch users
+    }
+  }, [dispatch, status]);
+
+  // Filter users based on search query
+  useEffect(() => {
+    if (searchQuery === "") {
+      setFilteredUsers(users); // If no search query, show all users
+    } else {
+      setFilteredUsers(
+        users.filter((user) =>
+          user.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      ); // Filter users by name
+    }
+  }, [searchQuery, users]);
+
+  return (
+    <div className="p-8 min-h-screen">
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+        Employees
+      </h1>
+
+      {/* Search Bar */}
+      <div className="mb-6 max-w-md mx-auto">
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"
+        />
+      </div>
+
+      {/* Display the user list */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8 mx-auto max-w-6xl">
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <div
+              key={user.id}
+              className="relative bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+              style={{
+                borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1", // Gradient border effect
+              }}
+            >
+              {/* Status Badge */}
+              <div
+                className={`absolute top-4 right-4 px-4 py-1 text-xs font-medium uppercase rounded-full ${
+                  user.status === "active"
+                    ? "bg-green-200 text-green-800 shadow-md"
+                    : "bg-red-200 text-red-800 shadow-md"
+                }`}
+              >
+                {user.status === "active" ? "Active" : "Inactive"}
+              </div>
+
+              {/* Avatar and Name */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold text-2xl shadow-md">
+                  {user.name[0].toUpperCase()}
+                </div>
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  {user.name}
+                </h2>
+              </div>
+
+              {/* Details */}
+              <div className="text-gray-600 text-sm space-y-2">
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">badge</span>
+                  {user.id}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">email</span>
+                  {user.email}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">person</span>
+                  {user.role}
+                </p>
+              </div>
+
+              {/* Permissions */}
+              <div className="mt-4">
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                  Permissions
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {user.permissions && user.permissions.length > 0 ? (
+                    user.permissions.map((permission, index) => (
+                      <span
+                        key={index}
+                        className="px-4 py-1 text-sm font-medium text-white bg-blue-500 rounded-full transition-all duration-200 ease-in-out hover:bg-blue-600 cursor-pointer"
+                      >
+                        {permission}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="px-4 py-1 text-sm font-medium text-white bg-gray-400 rounded-full">
+                      No Permissions
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-600 col-span-full">
+            No users found
+          </p>
+        )}
+      </div>
+
+    </div>
+  );
+}
+
+export default UserLists;
+
+ 
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllUsersAsync,
+  selectAllUserLists,
+} from "../UsersLists/components/userListsSlice"; // Import your slice actions and selector
+
+function UserLists() {
+  const dispatch = useDispatch();
+  const users = useSelector(selectAllUserLists); // Get users list from Redux state
+  const status = useSelector((state) => state.userLists.status); // To handle loading state
+  const error = useSelector((state) => state.userLists.error); // To handle error state
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [filteredUsers, setFilteredUsers] = useState(users); // State for filtered users list
+
+
+
+
+  // pagination code 
+  
+  
+  // Fetch users on component mount
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchAllUsersAsync()); // Dispatch the async thunk to fetch users
+    }
+  }, [dispatch, status]);
+
+  // Filter users based on search query
+  useEffect(() => {
+    if (searchQuery === "") {
+      setFilteredUsers(users); // If no search query, show all users
+    } else {
+      setFilteredUsers(
+        users.filter((user) =>
+          user.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      ); // Filter users by name
+    }
+  }, [searchQuery, users]);
+
+  return (
+    <div className="p-8 min-h-screen">
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+        Employees
+      </h1>
+
+      {/* Search Bar */}
+      <div className="mb-6 max-w-md mx-auto">
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"
+        />
+      </div>
+
+      {/* Display the user list */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8 mx-auto max-w-6xl">
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <div
+              key={user.id}
+              className="relative bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+              style={{
+                borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1", // Gradient border effect
+              }}
+            >
+              {/* Status Badge */}
+              <div
+                className={`absolute top-4 right-4 px-4 py-1 text-xs font-medium uppercase rounded-full ${
+                  user.status === "active"
+                    ? "bg-green-200 text-green-800 shadow-md"
+                    : "bg-red-200 text-red-800 shadow-md"
+                }`}
+              >
+                {user.status === "active" ? "Active" : "Inactive"}
+              </div>
+
+              {/* Avatar and Name */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold text-2xl shadow-md">
+                  {user.name[0].toUpperCase()}
+                </div>
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  {user.name}
+                </h2>
+              </div>
+
+              {/* Details */}
+              <div className="text-gray-600 text-sm space-y-2">
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">badge</span>
+                  {user.id}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">email</span>
+                  {user.email}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">person</span>
+                  {user.role}
+                </p>
+              </div>
+
+              {/* Permissions */}
+              <div className="mt-4">
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                  Permissions
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {user.permissions && user.permissions.length > 0 ? (
+                    user.permissions.map((permission, index) => (
+                      <span
+                        key={index}
+                        className="px-4 py-1 text-sm font-medium text-white bg-blue-500 rounded-full transition-all duration-200 ease-in-out hover:bg-blue-600 cursor-pointer"
+                      >
+                        {permission}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="px-4 py-1 text-sm font-medium text-white bg-gray-400 rounded-full">
+                      No Permissions
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-600 col-span-full">
+            No users found
+          </p>
+        )}
+      </div>
+
+    </div>
+  );
+}
+
+export default UserLists;
+
+ 
+
+import Pagination from "../../Pages/Pagination";
+ 
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllUsersAsync,
+  selectAllUserLists,
+} from "../UsersLists/components/userListsSlice"; // Import your slice actions and selector
+import Pagination from "../../Pages/Pagination";
+
+function UserLists() {
+  const dispatch = useDispatch();
+  const users = useSelector(selectAllUserLists); // Get users list from Redux state
+  const status = useSelector((state) => state.userLists.status); // To handle loading state
+  const error = useSelector((state) => state.userLists.error); // To handle error state
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [filteredUsers, setFilteredUsers] = useState(users); // State for filtered users list
+
+
+
+
+  // pagination code 
+  const usersPagination = [/* an array of users (length greater than 6) */]; 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentUsers = users.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+
+  // Fetch users on component mount
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchAllUsersAsync()); // Dispatch the async thunk to fetch users
+    }
+  }, [dispatch, status]);
+
+  // Filter users based on search query
+  useEffect(() => {
+    if (searchQuery === "") {
+      setFilteredUsers(users); // If no search query, show all users
+    } else {
+      setFilteredUsers(
+        users.filter((user) =>
+          user.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      ); // Filter users by name
+    }
+  }, [searchQuery, users]);
+
+  return (
+    <div className="p-8 min-h-screen">
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+        Employees
+      </h1>
+
+      {/* Search Bar */}
+      <div className="mb-6 max-w-md mx-auto">
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"
+        />
+      </div>
+
+      {/* Display the user list */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8 mx-auto max-w-6xl">
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <div
+              key={user.id}
+              className="relative bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+              style={{
+                borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1", // Gradient border effect
+              }}
+            >
+              {/* Status Badge */}
+              <div
+                className={`absolute top-4 right-4 px-4 py-1 text-xs font-medium uppercase rounded-full ${
+                  user.status === "active"
+                    ? "bg-green-200 text-green-800 shadow-md"
+                    : "bg-red-200 text-red-800 shadow-md"
+                }`}
+              >
+                {user.status === "active" ? "Active" : "Inactive"}
+              </div>
+
+              {/* Avatar and Name */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold text-2xl shadow-md">
+                  {user.name[0].toUpperCase()}
+                </div>
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  {user.name}
+                </h2>
+              </div>
+
+              {/* Details */}
+              <div className="text-gray-600 text-sm space-y-2">
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">badge</span>
+                  {user.id}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">email</span>
+                  {user.email}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">person</span>
+                  {user.role}
+                </p>
+              </div>
+
+              {/* Permissions */}
+              <div className="mt-4">
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                  Permissions
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {user.permissions && user.permissions.length > 0 ? (
+                    user.permissions.map((permission, index) => (
+                      <span
+                        key={index}
+                        className="px-4 py-1 text-sm font-medium text-white bg-blue-500 rounded-full transition-all duration-200 ease-in-out hover:bg-blue-600 cursor-pointer"
+                      >
+                        {permission}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="px-4 py-1 text-sm font-medium text-white bg-gray-400 rounded-full">
+                      No Permissions
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-600 col-span-full">
+            No users found
+          </p>
+        )}
+      </div>
+      <Pagination
+        totalItems={users.length}
+        itemsPerPage={itemsPerPage}
+        currentPage={currentPage}
+        paginate={paginate}
+      />
+    </div>
+  );
+}
+
+export default UserLists;
+
+ 
+export default function Pagination({ totalItems, itemsPerPage, currentPage, paginate }) {
+    const totalPages = Math.ceil(totalItems / itemsPerPage); // Total pages calculate karega
+  
+    return (
+      <div className="flex justify-center items-center mt-6 space-x-4">
+        <button
+          onClick={() => paginate(currentPage - 1)} // Previous page
+          disabled={currentPage === 1} // Disable button agar first page ho
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400"
+        >
+          Previous
+        </button>
+        <span className="text-lg font-medium">
+          Page {currentPage} of {totalPages} {/* Current page and total pages */}
+        </span>
+        <button
+          onClick={() => paginate(currentPage + 1)} // Next page
+          disabled={currentPage === totalPages} // Disable button agar last page ho
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400"
+        >
+          Next
+        </button>
+      </div>
+    );
+  }
+  
+ 
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllUsersAsync,
+  selectAllUserLists,
+} from "../UsersLists/components/userListsSlice"; // Import your slice actions and selector
+import Pagination from "../../Pages/Pagination";
+
+function UserLists() {
+  const dispatch = useDispatch();
+  const users = useSelector(selectAllUserLists); // Get users list from Redux state
+  const status = useSelector((state) => state.userLists.status); // To handle loading state
+  const error = useSelector((state) => state.userLists.error); // To handle error state
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [filteredUsers, setFilteredUsers] = useState(users); // State for filtered users list
+
+  // pagination code 
+  
+  // Fetch users on component mount
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchAllUsersAsync()); // Dispatch the async thunk to fetch users
+    }
+  }, [dispatch, status]);
+
+  // Filter users based on search query
+  useEffect(() => {
+    if (searchQuery === "") {
+      setFilteredUsers(users); // If no search query, show all users
+    } else {
+      setFilteredUsers(
+        users.filter((user) =>
+          user.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      ); // Filter users by name
+    }
+  }, [searchQuery, users]);
+
+  return (
+    <div className="p-8 min-h-screen">
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+        Employees
+      </h1>
+
+      {/* Search Bar */}
+      <div className="mb-6 max-w-md mx-auto">
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"
+        />
+      </div>
+
+      {/* Display the user list */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8 mx-auto max-w-6xl">
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <div
+              key={user.id}
+              className="relative bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+              style={{
+                borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1", // Gradient border effect
+              }}
+            >
+              {/* Status Badge */}
+              <div
+                className={`absolute top-4 right-4 px-4 py-1 text-xs font-medium uppercase rounded-full ${
+                  user.status === "active"
+                    ? "bg-green-200 text-green-800 shadow-md"
+                    : "bg-red-200 text-red-800 shadow-md"
+                }`}
+              >
+                {user.status === "active" ? "Active" : "Inactive"}
+              </div>
+
+              {/* Avatar and Name */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold text-2xl shadow-md">
+                  {user.name[0].toUpperCase()}
+                </div>
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  {user.name}
+                </h2>
+              </div>
+
+              {/* Details */}
+              <div className="text-gray-600 text-sm space-y-2">
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">badge</span>
+                  {user.id}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">email</span>
+                  {user.email}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">person</span>
+                  {user.role}
+                </p>
+              </div>
+
+              {/* Permissions */}
+              <div className="mt-4">
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                  Permissions
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {user.permissions && user.permissions.length > 0 ? (
+                    user.permissions.map((permission, index) => (
+                      <span
+                        key={index}
+                        className="px-4 py-1 text-sm font-medium text-white bg-blue-500 rounded-full transition-all duration-200 ease-in-out hover:bg-blue-600 cursor-pointer"
+                      >
+                        {permission}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="px-4 py-1 text-sm font-medium text-white bg-gray-400 rounded-full">
+                      No Permissions
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-600 col-span-full">
+            No users found
+          </p>
+        )}
+      </div>
+
+    </div>
+  );
+}
+
+export default UserLists;
+
+ 
+
+
+  const indexOfLastUser = currentPage * usersPerPage; // Current page ka last user index
+  const indexOfFirstUser = indexOfLastUser - usersPerPage; // Current page ka first user index
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser); // Current page ke users
+  const paginate = (pageNumber) => setCurrentPage(pageNumber); // Page ko update karega
+
+ 
+
+      <Pagination
+  totalItems={filteredUsers.length} // Total items ko pass karein
+  itemsPerPage={usersPerPage} // Har page par kitni items dikhani hain
+  currentPage={currentPage} // Current page number
+  paginate={paginate} // Paginate function ko pass karein
+/>
+ 
+
+      {/* <Pagination
+        totalItems={users.length}
+        itemsPerPage={usersPerPage}
+        currentPage={currentPage}
+        paginate={paginate}
+      /> */}
+ 
+export default function Pagination({ totalItems, itemsPerPage, currentPage, paginate }) {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  return (
+    <div className="flex justify-center items-center mt-6 space-x-4">
+      <button
+        onClick={() => paginate(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400"
+      >
+        Previous
+      </button>
+      <span className="text-lg font-medium">
+        Page {currentPage} of {totalPages}
+      </span>
+      <button
+        onClick={() => paginate(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400"
+      >
+        Next
+      </button>
+    </div>
+  );
+}
+ 
+
+      {/* <Pagination
+        totalItems={users.length}
+        itemsPerPage={usersPerPage}
+        currentPage={currentPage}
+        paginate={paginate}
+      /> */}
+ 
+
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+ 
+
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+ 
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 6;
+ 
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllUsersAsync,
+  selectAllUserLists,
+} from "../UsersLists/components/userListsSlice"; // Import your slice actions and selector
+import Pagination from "../../Pages/Pagination";
+
+function UserLists() {
+  const dispatch = useDispatch();
+  const users = useSelector(selectAllUserLists); // Get users list from Redux state
+  const status = useSelector((state) => state.userLists.status); // To handle loading state
+  const error = useSelector((state) => state.userLists.error); // To handle error state
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 6;
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [filteredUsers, setFilteredUsers] = useState(users); // State for filtered users list
+
+  // Fetch users on component mount
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchAllUsersAsync()); // Dispatch the async thunk to fetch users
+    }
+  }, [dispatch, status]);
+
+  // Filter users based on search query
+  useEffect(() => {
+    if (searchQuery === "") {
+      setFilteredUsers(users); // If no search query, show all users
+    } else {
+      setFilteredUsers(
+        users.filter((user) =>
+          user.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      ); // Filter users by name
+    }
+  }, [searchQuery, users]);
+
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  return (
+    <div className="p-8 min-h-screen">
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+        Employees
+      </h1>
+
+      {/* Search Bar */}
+      <div className="mb-6 max-w-md mx-auto">
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"
+        />
+      </div>
+
+      {/* Display the user list */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8 mx-auto max-w-6xl">
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <div
+              key={user.id}
+              className="relative bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+              style={{
+                borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1", // Gradient border effect
+              }}
+            >
+              {/* Status Badge */}
+              <div
+                className={`absolute top-4 right-4 px-4 py-1 text-xs font-medium uppercase rounded-full ${
+                  user.status === "active"
+                    ? "bg-green-200 text-green-800 shadow-md"
+                    : "bg-red-200 text-red-800 shadow-md"
+                }`}
+              >
+                {user.status === "active" ? "Active" : "Inactive"}
+              </div>
+
+              {/* Avatar and Name */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold text-2xl shadow-md">
+                  {user.name[0].toUpperCase()}
+                </div>
+                <h2 className="text-2xl font-semibold text-gray-800">{user.name}</h2>
+              </div>
+
+              {/* Details */}
+              <div className="text-gray-600 text-sm space-y-2">
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">badge</span>
+                  {user.id}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">email</span>
+                  {user.email}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">person</span>
+                  {user.role}
+                </p>
+              </div>
+
+              {/* Permissions */}
+              <div className="mt-4">
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">Permissions</h3>
+                <div className="flex flex-wrap gap-3">
+                  {user.permissions && user.permissions.length > 0 ? (
+                    user.permissions.map((permission, index) => (
+                      <span
+                        key={index}
+                        className="px-4 py-1 text-sm font-medium text-white bg-blue-500 rounded-full transition-all duration-200 ease-in-out hover:bg-blue-600 cursor-pointer"
+                      >
+                        {permission}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="px-4 py-1 text-sm font-medium text-white bg-gray-400 rounded-full">
+                      No Permissions
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-600 col-span-full">No users found</p>
+        )}
+      </div>
+      <Pagination
+        totalItems={users.length}
+        itemsPerPage={usersPerPage}
+        currentPage={currentPage}
+        paginate={paginate}
+      />
+    </div>
+  );
+}
+
+export default UserLists;
+
+ 
+
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+ 
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllUsersAsync,
+  selectAllUserLists,
+} from "../UsersLists/components/userListsSlice";
+ 
+import React, { useState } from "react";
+
+function Pagination() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 6; // Number of items per page
+  const totalUsers = users.length; // Total users from your data
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  
+
+  return <div></div>;
+}
+
+export default Pagination;
+
+ 
+// userLists.js
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllUsersAsync,
+  selectAllUserLists,
+} from "../UsersLists/components/userListsSlice"; // Import your slice actions and selector
+
+function UserLists() {
+  const dispatch = useDispatch();
+  const users = useSelector(selectAllUserLists); // Get users list from Redux state
+  const status = useSelector((state) => state.userLists.status); // To handle loading state
+  const error = useSelector((state) => state.userLists.error); // To handle error state
+
+  // Fetch users on component mount
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchAllUsersAsync()); // Dispatch the async thunk to fetch users
+    }
+  }, [dispatch, status]);
+
+  return (
+    <div className="p-8 min-h-screen">
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+        Employees
+      </h1>
+
+      {/* Display the user list */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8 mx-auto max-w-6xl">
+        {users.map((user) => (
+          <div
+            key={user.id}
+            className="relative bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+            style={{
+              borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1", // Gradient border effect
+            }}
+          >
+            {/* Status Badge */}
+            <div
+              className={`absolute top-4 right-4 px-4 py-1 text-xs font-medium uppercase rounded-full ${
+                user.status === "active"
+                  ? "bg-green-200 text-green-800 shadow-md"
+                  : "bg-red-200 text-red-800 shadow-md"
+              }`}
+            >
+              {user.status === "active" ? "Active" : "Inactive"}
+            </div>
+
+            {/* Avatar and Name */}
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold text-2xl shadow-md">
+                {user.name[0].toUpperCase()}
+              </div>
+              <h2 className="text-2xl font-semibold text-gray-800">
+                {user.name}
+              </h2>
+            </div>
+
+            {/* Details */}
+            <div className="text-gray-600 text-sm space-y-2">
+            <p className="flex items-center gap-2">
+                <span className="material-icons text-gray-500">Id:</span>
+                {user.id}
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="material-icons text-gray-500">Id:</span>
+                {user.name}
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="material-icons text-gray-500">Email:</span>
+                {user.email}
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="material-icons text-gray-500">Role:</span>
+                {user.role}
+              </p>
+            </div>
+
+            {/* Permissions */}
+            <div className="mt-4">
+              <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                Permissions
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {user.permissions && user.permissions.length > 0 ? (
+                  user.permissions.map((permission, index) => (
+                    <span
+                      key={index}
+                      className="px-4 py-1 text-sm font-medium text-white bg-blue-500 rounded-full transition-all duration-200 ease-in-out hover:bg-blue-600 cursor-pointer"
+                    >
+                      {permission}
+                    </span>
+                  ))
+                ) : (
+                  <span className="px-4 py-1 text-sm font-medium text-white bg-gray-400 rounded-full">
+                    No Permissions
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default UserLists;
+
+ 
+../../../public/download.png
+ 
+
+import avtar from "../../../public/download.png"
+ 
+https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80
+ 
+<h2>Logout</h2>
+ 
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 mx-auto max-w-5xl">
+      {users.map((user) => (
+        <div
+          key={user.id}
+          className="relative bg-white rounded-lg p-6 border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300"
+          style={{
+            borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1", // Gradient border effect
+          }}
+        >
+          {/* Status Badge */}
+          <div
+            className={`absolute top-3 right-3 px-2 py-1 text-xs font-medium uppercase rounded-md ${
+              user.status === "active"
+                ? "bg-green-100 text-green-600"
+                : "bg-red-100 text-red-600"
+            }`}
+          >
+            {user.status === "active" ? "Active" : "Inactive"}
+          </div>
+  
+          {/* Avatar and Name */}
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 flex items-center justify-center rounded-full bg-purple-200 text-white font-bold text-lg">
+              {user.name[0].toUpperCase()}
+            </div>
+            <h2 className="text-lg font-semibold text-gray-800">{user.name}</h2>
+          </div>
+  
+          {/* Details */}
+          <div className="mt-4 text-gray-600 text-sm">
+            <p className="flex items-center gap-2">
+              <span className="material-icons text-gray-500">badge</span>
+              {user.id}
+            </p>
+            <p className="flex items-center gap-2 mt-2">
+              <span className="material-icons text-gray-500">email</span>
+              {user.email}
+            </p>
+            <p className="flex items-center gap-2 mt-2">
+              <span className="material-icons text-gray-500">person</span>
+              {user.role}
+            </p>
+          </div>
+  
+          {/* Permissions */}
+          <div className="mt-4">
+            <h3 className="text-sm font-semibold text-gray-700">Permissions</h3>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {/* Display permissions as chips */}
+              {user.permissions && user.permissions.length > 0 ? (
+                user.permissions.map((permission, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 text-sm font-medium text-white bg-blue-500 rounded-full"
+                  >
+                    {permission}
+                  </span>
+                ))
+              ) : (
+                <span className="px-3 py-1 text-sm font-medium text-white bg-gray-400 rounded-full">
+                  No Permissions
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+ 
+
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-md rounded-lg p-6 space-y-4"
+      >
+        <div className="flex flex-col space-y-2">
+          <input
+            type="text"
+            placeholder="Name"
+            value={currentUser.name}
+            onChange={(e) =>
+              setCurrentUser({ ...currentUser, name: e.target.value })
+            }
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={currentUser.email}
+            onChange={(e) =>
+              setCurrentUser({ ...currentUser, email: e.target.value })
+            }
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <select
+            value={currentUser.role}
+            onChange={(e) =>
+              setCurrentUser({ ...currentUser, role: e.target.value })
+            }
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="">Select Role</option>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+
+          <select
+            value={currentUser.status}
+            onChange={(e) =>
+              setCurrentUser({ ...currentUser, status: e.target.value })
+            }
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+
+          {/* Permissions Selection */}
+          <div>
+            <h3 className="text-lg font-semibold">Permissions</h3>
+            <div className="flex flex-col space-y-2">
+              <label>
+                <input
+                  type="checkbox"
+                  value="view"
+                  checked={currentUser.permissions.includes("view")}
+                  onChange={handlePermissionChange}
+                  className="mr-2"
+                />
+                View
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          className={`w-full py-2 rounded-md ${
+            currentUser.name &&
+            currentUser.email &&
+            currentUser.role &&
+            currentUser.status &&
+            currentUser.permissions.length > 0
+              ? "bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          }`}
+          disabled={
+            !(
+              currentUser.name &&
+              currentUser.email &&
+              currentUser.role &&
+              currentUser.status &&
+              currentUser.permissions.length > 0
+            )
+          }
+        >
+          {formMode === "add" ? "Add User" : "Update User"}
+        </button>
+      </form>
+ 
+ <button
+          type="submit"
+          className="w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >
+          {formMode === "add" ? "Add User" : "Update User"}
+        </button>
+ 
+<label>
+                <input
+                  type="checkbox"
+                  value="edit"
+                  checked={currentUser.permissions.includes("edit")}
+                  onChange={handlePermissionChange}
+                  className="mr-2"
+                />
+                Edit
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  value="delete"
+                  checked={currentUser.permissions.includes("delete")}
+                  onChange={handlePermissionChange}
+                  className="mr-2"
+                />
+                Delete
+              </label>
+ 
+,
+        "edit"
+ 
+,
+        "delete"
+ 
+  "employe": [
+    {
+      "id": "9093",
+      "name": "jonh",
+      "email": "jon@gmail.com",
+      "role": "user",
+      "status": "active",
+      "permissions": [
+        "view",
+        "edit"
+      ]
+    },
+    {
+      "id": "b7ab",
+      "name": "muneeb",
+      "email": "muneeba@gmail.com",
+      "role": "user",
+      "status": "inactive",
+      "permissions": [
+        "view"
+      ]
+    },
+    {
+      "id": "57cb",
+      "name": "nazi",
+      "email": "nazi@gmail.com",
+      "role": "user",
+      "status": "active",
+      "permissions": [
+        "edit",
+        "delete"
+      ]
+    },
+    {
+      "id": "716e",
+      "name": "sufiya",
+      "email": "sufiya@gmail.com",
+      "role": "user",
+      "status": "active",
+      "permissions": [
+        "view"
+      ]
+    }
+  ]
+ 
+ <div className="p-8 min-h-screen">
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+        Employees
+      </h1>
+
+      {/* Display the user list */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 mx-auto max-w-5xl ">
+        {users.map((user) => (
+          <div
+            key={user.id}
+            className="relative bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300"
+            style={{
+              borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1", // Gradient border effect
+            }}
+          >
+            {/* Status badge */}
+            {/* <div
+              className={` absolute top-3 right-3 px-2 py-1 text-xs font-medium uppercase rounded-md ${
+                user.isActive
+                  ? "bg-green-100 text-green-600"
+                  : "bg-red-100 text-red-600"
+              }`}
+            >
+              {user.isActive ? "Active" : "Inactive"}
+            </div> */}
+            
+
+            {/* Avatar and name */}
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-purple-200 text-white font-bold text-lg">
+                {user.name[0].toUpperCase()}
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800">
+                {user.name}
+              </h2>
+            </div>
+
+            {/* Details */}
+            <div className="mt-4 text-gray-600 text-sm">
+              <p className="flex items-center gap-2">
+                <span className="material-icons text-gray-500">badge</span>
+                {user.id}
+              </p>
+              <p className="flex items-center gap-2 mt-2">
+                <span className="material-icons text-gray-500">email</span>
+                {user.email}
+              </p>
+              <p className="flex items-center gap-2 mt-2">
+                <span className="material-icons text-gray-500">person</span>
+                {user.role}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+ 
+
+            <div
+              className={` absolute top-3 right-3 px-2 py-1 text-xs font-medium uppercase rounded-md ${
+                user.isActive
+                  ? "bg-green-100 text-green-600"
+                  : "bg-red-100 text-red-600"
+              }`}
+            >
+              {user.isActive ? "Active" : "Inactive"}
+            </div>
+ 
+ <div className="p-8 min-h-screen">
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+        Employees
+      </h1>
+
+      {/* Display the user list */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 mx-auto max-w-5xl ">
+        {users.map((user) => (
+          <div
+            key={user.id}
+            className="relative bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300"
+            style={{
+              borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1", // Gradient border effect
+            }}
+          >
+            {/* Status badge */}
+            <div
+              className={`absolute top-3 right-3 px-2 py-1 text-xs font-medium uppercase rounded-md ${
+                user.status === "active"
+                  ? "bg-green-100 text-green-600"
+                  : "bg-red-100 text-red-600"
+              }`}
+            >
+              {user.status === "active" ? "Active" : "Inactive"}
+            </div>
+
+            {/* Avatar and name */}
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-purple-200 text-white font-bold text-lg">
+                {user.name[0].toUpperCase()}
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800">
+                {user.name}
+              </h2>
+            </div>
+
+            {/* Details */}
+            <div className="mt-4 text-gray-600 text-sm">
+              <p className="flex items-center gap-2">
+                <span className="material-icons text-gray-500">badge</span>
+                {user.id}
+              </p>
+              <p className="flex items-center gap-2 mt-2">
+                <span className="material-icons text-gray-500">email</span>
+                {user.email}
+              </p>
+              <p className="flex items-center gap-2 mt-2">
+                <span className="material-icons text-gray-500">person</span>
+                {user.role}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+ 
+
+join
+ 
+ {users.map((user) => (
+              <tr key={user.id} className="border-b hover:bg-gray-50">
+                <td className="px-6 py-4 text-sm text-gray-700">{user.name}</td>
+                <td className="px-6 py-4 text-sm text-gray-700">{user.email}</td>
+                <td className="px-6 py-4 text-sm text-gray-700">{user.role}</td>
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {user.status === "active" ? (
+                    <span className="text-green-500">Active</span>
+                  ) : (
+                    <span className="text-red-500">Inactive</span>
+                  )}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {user.permissions.join(", ")}
+                </td>
+                <td className="px-6 py-4 text-sm">
+                  <div className="flex flex-col sm:flex-row sm:space-x-2">
+                    <button
+                      onClick={() => handleEdit(user)}
+                      className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 w-full sm:w-auto mb-2 sm:mb-0"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(user.id)}
+                      className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-auto"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+ 
+<td className="px-6 py-4 text-sm text-gray-700">
+                  {user.permissions.join(", ")}
+                </td>
+ 
+user.permissions.join(", ")
+ 
+"employe": [
+    {
+      "id": "9093",
+      "name": "jonh",
+      "email": "jon@gmail.com",
+      "role": "user",
+      "status": "active"
+    },
+    {
+      "id": "b7ab",
+      "name": "muneeb",
+      "email": "muneeba@gmail.com",
+      "role": "user",
+      "status": "inactive"
+    },
+    {
+      "id": "57cb",
+      "name": "nazi",
+      "email": "nazi@gmail.com",
+      "role": "user",
+      "status": "active"
+    }
+  ]
+ 
+"employe": [
+    {
+      "id": "9093",
+      "name": "jonh",
+      "email": "jon@gmail.com",
+      "role": "user",
+      "status": "active"
+    },
+    {
+      "id": "b7ab",
+      "name": "muneeb",
+      "email": "muneeba@gmail.com",
+      "role": "user",
+      "status": "inactive"
+    },
+    {
+      "id": "57cb",
+      "name": "nazi",
+      "email": "nazi@gmail.com",
+      "role": "user",
+      "status": "active"
+    }
+  ]
+ 
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getUsers, addUser, editUser, removeUser } from "../userSlice";
+
+function UserManagement() {
+  const dispatch = useDispatch();
+  const { users, status, error } = useSelector((state) => state.user);
+
+  const [formMode, setFormMode] = useState("add");
+  const [currentUser, setCurrentUser] = useState({
+    name: "",
+    email: "",
+    role: "",
+    status: "active", // Default status
+  });
+
+  // Fetch users on component mount
+  useEffect(() => {
+    dispatch(getUsers());
+  }, [dispatch]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (formMode === "add") {
+      dispatch(addUser(currentUser));
+    } else {
+      dispatch(editUser({ id: currentUser.id, user: currentUser }));
+    }
+
+    setCurrentUser({ name: "", email: "", role: "", status: "active" });
+    setFormMode("add");
+  };
+
+  const handleEdit = (user) => {
+    setFormMode("edit");
+    setCurrentUser(user);
+  };
+
+  const handleDelete = (id) => {
+    dispatch(removeUser(id));
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      <h2 className="text-3xl font-semibold text-center mb-6">
+        User Management
+      </h2>
+
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-md rounded-lg p-6 space-y-4"
+      >
+        <div className="flex flex-col space-y-2">
+          <input
+            type="text"
+            placeholder="Name"
+            value={currentUser.name}
+            onChange={(e) =>
+              setCurrentUser({ ...currentUser, name: e.target.value })
+            }
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={currentUser.email}
+            onChange={(e) =>
+              setCurrentUser({ ...currentUser, email: e.target.value })
+            }
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <select
+            value={currentUser.role}
+            onChange={(e) =>
+              setCurrentUser({ ...currentUser, role: e.target.value })
+            }
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="">Select Role</option>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+
+          {/* Add status field */}
+          <select
+            value={currentUser.status}
+            onChange={(e) =>
+              setCurrentUser({ ...currentUser, status: e.target.value })
+            }
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+        <button
+          type="submit"
+          className="w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >
+          {formMode === "add" ? "Add User" : "Update User"}
+        </button>
+      </form>
+
+      {status === "loading" && (
+        <p className="text-center text-gray-500 mt-4">Loading...</p>
+      )}
+      {status === "failed" && (
+        <p className="text-center text-red-500 mt-4">Error: {error}</p>
+      )}
+
+      <div className="overflow-x-auto mt-6">
+        <table className="w-full table-auto border-collapse border border-gray-200">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                Email
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                Role
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user.id} className="border-b hover:bg-gray-50">
+                <td className="px-6 py-4 text-sm text-gray-700">{user.name}</td>
+                <td className="px-6 py-4 text-sm text-gray-700">{user.email}</td>
+                <td className="px-6 py-4 text-sm text-gray-700">{user.role}</td>
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {user.status === "active" ? (
+                    <span className="text-green-500">Active</span>
+                  ) : (
+                    <span className="text-red-500">Inactive</span>
+                  )}
+                </td>
+                <td className="px-6 py-4 text-sm">
+                  <div className="flex flex-col sm:flex-row sm:space-x-2">
+                    <button
+                      onClick={() => handleEdit(user)}
+                      className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 w-full sm:w-auto mb-2 sm:mb-0"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(user.id)}
+                      className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-auto"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+export default UserManagement;
+
+ 
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getUsers, addUser, editUser, removeUser } from "../userSlice";
+function UserManagement() {
+  const dispatch = useDispatch();
+  const { users, status, error } = useSelector((state) => state.user);
+
+  const [formMode, setFormMode] = useState("add");
+  const [currentUser, setCurrentUser] = useState({
+    name: "",
+    email: "",
+    role: "",
+  });
+
+  // Fetch users on component mount
+  useEffect(() => {
+    dispatch(getUsers());
+  }, [dispatch]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (formMode === "add") {
+      dispatch(addUser(currentUser));
+    } else {
+      dispatch(editUser({ id: currentUser.id, user: currentUser }));
+    }
+
+    setCurrentUser({ name: "", email: "", role: "" });
+    setFormMode("add");
+  };
+
+  const handleEdit = (user) => {
+    setFormMode("edit");
+    setCurrentUser(user);
+  };
+
+  const handleDelete = (id) => {
+    dispatch(removeUser(id));
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      <h2 className="text-3xl font-semibold text-center mb-6">
+        User Management
+      </h2>
+
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-md rounded-lg p-6 space-y-4"
+      >
+        <div className="flex flex-col space-y-2">
+          <input
+            type="text"
+            placeholder="Name"
+            value={currentUser.name}
+            onChange={(e) =>
+              setCurrentUser({ ...currentUser, name: e.target.value })
+            }
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={currentUser.email}
+            onChange={(e) =>
+              setCurrentUser({ ...currentUser, email: e.target.value })
+            }
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <select
+            value={currentUser.role}
+            onChange={(e) =>
+              setCurrentUser({ ...currentUser, role: e.target.value })
+            }
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="">Select Role</option>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button
+          type="submit"
+          className="w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >
+          {formMode === "add" ? "Add User" : "Update User"}
+        </button>
+      </form>
+
+      {status === "loading" && (
+        <p className="text-center text-gray-500 mt-4">Loading...</p>
+      )}
+      {status === "failed" && (
+        <p className="text-center text-red-500 mt-4">Error: {error}</p>
+      )}
+
+      <div className="overflow-x-auto mt-6">
+    <table className="w-full table-auto border-collapse border border-gray-200">
+      <thead className="bg-gray-100">
+        <tr>
+          <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+            Name
+          </th>
+          <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+            Email
+          </th>
+          <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+            Role
+          </th>
+          <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {users.map((user) => (
+          <tr key={user.id} className="border-b hover:bg-gray-50">
+            <td className="px-6 py-4 text-sm text-gray-700">{user.name}</td>
+            <td className="px-6 py-4 text-sm text-gray-700">{user.email}</td>
+            <td className="px-6 py-4 text-sm text-gray-700">{user.role}</td>
+            <td className="px-6 py-4 text-sm">
+              <div className="flex flex-col sm:flex-row sm:space-x-2">
+                <button
+                  onClick={() => handleEdit(user)}
+                  className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 w-full sm:w-auto mb-2 sm:mb-0"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(user.id)}
+                  className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-auto"
+                >
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+    </div>
+  );
+}
+
+export default UserManagement;
+
+ 
+
+              borderWidth: "5px", // Border width to make the border visible
+    borderRadius: "15px", // Apply rounded corners
+ 
+<div
+            key={user.id}
+            className=" relative bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300"
+            style={{
+              borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1 rounded-lg",
+            }}
+          >
+ 
+
+              borderRadius: "15px"
+ 
+
+    backgroundOrigin: "border-box",  // Ensures gradient is applied only to the border area
+ 
+<div
+            key={user.id}
+            className=" relative bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300"
+            style={{
+              borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1",
+              borderRadius: "15px"
+            }}
+          >
+ 
+<div
+            key={user.id}
+            className=" relative bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300"
+            style={{
+              borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1",
+              borderRadius: "15px"
+            }}
+          >
+ 
+
+    background: "linear-gradient(to right, #6EE7B7, #3B82F6)",  // Gradient background
+ 
+<div
+            key={user.id}
+            className=" relative bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300"
+            style={{
+              borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1",
+            }}
+          >
+ 
+<div
+            key={user.id}
+            className=" relative bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300"
+            style={{
+              borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1",
+            }}
+          >
+ 
+ style={{
+              borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1",
+            }}
+ 
+borderRadius: "15px"
+ 
+ relative bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300
+ 
+borderRadius:"20px" // Gradient border effect
+ 
+grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4
+ 
+
+  @media screen and (max-width: 1024px) {
+    .content {
+      background: transparent;
+    }
+  }
+ 
+White background for content
+ 
+
+  
+  /* Main wrapper with background */
+  .background-wrapper {
+    position: relative;
+    background: #f5f5fa; /* Light purple background or customize as needed */
+    min-height: 100vh; /* Full viewport height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Prevent extra scroll from designs */
+    margin: 0; /* Remove space on the left and right */
+    padding: 0; /* Ensure no padding */
+  }
+  
+  /* Left-top curve design */
+  .curve-design {
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 200px;
+    height: 200px;
+    background: #9e77ed; /* Purple shade for curve */
+    /* border-radius: 50%;  */
+    z-index: 1;
+  }
+  
+  /* Right-bottom background design */
+  .background-wrapper::after {
+    content: "";
+    position: absolute;
+    bottom: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: #9e77ed; /* Lighter purple for bottom */
+    /* border-radius: 50%; */
+    z-index: 1;
+  }
+  
+  /* Content container */
+  .content {
+    position: relative;
+    z-index: 2; /* Ensure content is above the designs */
+    width: 95%;
+    max-width: 1200px; /* Restrict maximum width */
+    /* padding: 20px;  */
+    background: #ffffff; /* White background for content */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    border-radius: 10px; /* Rounded corners for content */
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+ 
+bg-white
+ 
 <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
         User List
       </h1>

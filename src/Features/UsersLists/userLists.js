@@ -1,17 +1,47 @@
-// userLists.js
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAllUsersAsync,
   selectAllUserLists,
 } from "../UsersLists/components/userListsSlice"; // Import your slice actions and selector
+import Pagination from "../../Pages/Pagination";
 
 function UserLists() {
   const dispatch = useDispatch();
-  const users = useSelector(selectAllUserLists); // Get users list from Redux state
+  const employeeData = useSelector(selectAllUserLists); // Get users list from Redux state
   const status = useSelector((state) => state.userLists.status); // To handle loading state
   const error = useSelector((state) => state.userLists.error); // To handle error state
+  const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
+  const filteredData = employeeData.filter(employee =>
+    employee.name.toLowerCase().includes(search.toLowerCase()) ||
+    employee.email.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+    setCurrentPage(1); // Reset to page 1 when search changes
+  };
+
+  const handlePagination = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+
+
+
+
+  // pagination code 
+  
+  
   // Fetch users on component mount
   useEffect(() => {
     if (status === "idle") {
@@ -19,61 +49,117 @@ function UserLists() {
     }
   }, [dispatch, status]);
 
+  // Filter users based on search query
+  // useEffect(() => {
+  //   if (searchQuery === "") {
+  //     setFilteredUsers(users); // If no search query, show all users
+  //   } else {
+  //     setFilteredUsers(
+  //       users.filter((user) =>
+  //         user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  //       )
+  //     ); // Filter users by name
+  //   }
+  // }, [searchQuery, users]);
+
   return (
-    <div className="p-6 min-h-screen">
+    <div className="p-8 min-h-screen">
       <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
         Employees
       </h1>
 
-      {/* Display the user list */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {users.map((user) => (
-          <div
-            key={user.id}
-            className="relative bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300"
-            style={{
-              borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1", // Gradient border effect
-            }}
-          >
-            {/* Status badge */}
-            <div
-              className={`absolute top-3 right-3 px-2 py-1 text-xs font-medium uppercase rounded-md ${
-                user.isActive
-                  ? "bg-green-100 text-green-600"
-                  : "bg-red-100 text-red-600"
-              }`}
-            >
-              {user.isActive ? "Active" : "Inactive"}
-            </div>
-
-            {/* Avatar and name */}
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-purple-200 text-white font-bold text-lg">
-                {user.name[0].toUpperCase()}
-              </div>
-              <h2 className="text-lg font-semibold text-gray-800">
-                {user.name}
-              </h2>
-            </div>
-
-            {/* Details */}
-            <div className="mt-4 text-gray-600 text-sm">
-              <p className="flex items-center gap-2">
-                <span className="material-icons text-gray-500">badge</span>
-                {user.id}
-              </p>
-              <p className="flex items-center gap-2 mt-2">
-                <span className="material-icons text-gray-500">email</span>
-                {user.email}
-              </p>
-              <p className="flex items-center gap-2 mt-2">
-                <span className="material-icons text-gray-500">person</span>
-                {user.role}
-              </p>
-            </div>
-          </div>
-        ))}
+      {/* Search Bar */}
+      <div className="mb-6 max-w-md mx-auto">
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={search}
+          onChange={handleSearch}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg"
+        />
       </div>
+
+      {/* Display the user list */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8 mx-auto max-w-6xl">
+        {currentItems.length > 0 ? (
+          currentItems.map((user) => (
+            <div
+              key={user.id}
+              className="relative bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+              style={{
+                borderImage: "linear-gradient(to right, #6EE7B7, #3B82F6) 1", // Gradient border effect
+              }}
+            >
+              {/* Status Badge */}
+              <div
+                className={`absolute top-4 right-4 px-4 py-1 text-xs font-medium uppercase rounded-full ${
+                  user.status === "active"
+                    ? "bg-green-200 text-green-800 shadow-md"
+                    : "bg-red-200 text-red-800 shadow-md"
+                }`}
+              >
+                {user.status === "active" ? "Active" : "Inactive"}
+              </div>
+
+              {/* Avatar and Name */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold text-2xl shadow-md">
+                  {user.name[0].toUpperCase()}
+                </div>
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  {user.name}
+                </h2>
+              </div>
+
+              {/* Details */}
+              <div className="text-gray-600 text-sm space-y-2">
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">badge</span>
+                  {user.id}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">email</span>
+                  {user.email}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="material-icons text-gray-500">person</span>
+                  {user.role}
+                </p>
+              </div>
+
+              {/* Permissions */}
+              <div className="mt-4">
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                  Permissions
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {user.permissions && user.permissions.length > 0 ? (
+                    user.permissions.map((permission, index) => (
+                      <span
+                        key={index}
+                        className="px-4 py-1 text-sm font-medium text-white bg-blue-500 rounded-full transition-all duration-200 ease-in-out hover:bg-blue-600 cursor-pointer"
+                      >
+                        {permission}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="px-4 py-1 text-sm font-medium text-white bg-gray-400 rounded-full">
+                      No Permissions
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-600 col-span-full">
+            No users found
+          </p>
+        )}
+      </div>
+      <Pagination handlePagination={handlePagination}
+      currentPage={currentPage}
+      totalPages={totalPages}></Pagination>
     </div>
   );
 }
