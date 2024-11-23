@@ -23,12 +23,11 @@ export function Signup() {
       {user && <Navigate to="/" replace={true}></Navigate>}
       {user?.email}
       <div className="flex min-h-full flex-1 flex-col justify-center items-center px-6 py-12 lg:px-8 ">
-        <div
-          className="bg-white p-4 shadow-md w-96"
-          style={{ borderRadius: "40px" }}
+      <div
+          className="bg-white p-4 shadow-md w-96 border-[0px] border-[#9e77ed] shadow-[4px_4px_8px_#9e77ed]"
+          style={{ borderRadius: "20px" }}
         >
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <img className="mx-auto h-24 w-auto" src="" alt="SM Traders Logo" />
             <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
               Create a account
             </h2>
