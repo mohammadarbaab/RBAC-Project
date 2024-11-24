@@ -46,7 +46,7 @@ function App() {
   return (
     <div>
       <GlobalLayout>
-      <RouterProvider router={router} />
+        <RouterProvider router={router} />
       </GlobalLayout>
     </div>
   );

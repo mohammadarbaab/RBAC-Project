@@ -11,20 +11,11 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { selectLoggedInUser } from "../auth/authSlice";
 import { useSelector } from "react-redux";
-import avtar from "../../images/download.png"
+import avtar from "../../images/download.png";
 
-const navigation = [
-  // { name: "Dashboard", href: "#", current: true },
-  // { name: "Team", href: "#", current: false },
-  // { name: "Projects", href: "#", current: false },
-  { name: "Admin", link: "/admin", admin: true },
-];
+const navigation = [{ name: "Admin", link: "/admin", admin: true }];
 
-const userNavigation = [
-  // { name: "Your Profile", link: "/profile" },
-  // { name: "My Orders", link: "/orders" },
-  { name: "Sign out", link: "/logout" },
-];
+const userNavigation = [{ name: "Sign out", link: "/logout" }];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -57,7 +48,9 @@ export default function Navbar() {
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
               <Link to="/">
-                <h2 className="text-xl font-bold text-gray-800 tracking-wide bg-gradient-to-r from-purple-400 to-indigo-600 text-transparent bg-clip-text">User Data List</h2>
+                <h2 className="text-xl font-bold text-gray-800 tracking-wide bg-gradient-to-r from-purple-400 to-indigo-600 text-transparent bg-clip-text">
+                  User Data List
+                </h2>
               </Link>
             </div>
           </div>
@@ -98,11 +91,7 @@ export default function Navbar() {
                 <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
-                  <img
-                    alt=""
-                    src={avtar}
-                    className="size-8 rounded-full"
-                  />
+                  <img alt="" src={avtar} className="size-8 rounded-full" />
                 </MenuButton>
               </div>
               <MenuItems

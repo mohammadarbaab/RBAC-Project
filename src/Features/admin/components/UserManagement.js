@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers, addUser, editUser, removeUser } from "../userSlice";
-import Swal from 'sweetalert2'; // Import SweetAlert2 at the top
-
+import Swal from "sweetalert2";
 
 function UserManagement() {
   const dispatch = useDispatch();
   const { users, status, error } = useSelector((state) => state.user);
   // const permissions = Array.isArray(user.permissions) ? user.permissions.join(", ") : "No Permissions";
-
   const [formMode, setFormMode] = useState("add");
   const [currentUser, setCurrentUser] = useState({
     name: "",
     email: "",
     role: "",
-    status: "active", // Default status
-    permissions: [], // Permissions as an empty array initially
+    status: "active",
+    permissions: [],
   });
 
   // Fetch users on component mount
@@ -25,26 +23,26 @@ function UserManagement() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     if (formMode === "add") {
       // Dispatch the action to add the user
       dispatch(addUser(currentUser))
         .then(() => {
           // On success, show SweetAlert2 for adding user
           Swal.fire({
-            title: 'Success!',
-            text: 'User added successfully.',
-            icon: 'success',
-            confirmButtonText: 'OK'
+            title: "Success!",
+            text: "User added successfully.",
+            icon: "success",
+            confirmButtonText: "OK",
           });
         })
         .catch((error) => {
           // On error, show SweetAlert2 for error
           Swal.fire({
-            title: 'Error!',
-            text: 'Something went wrong while adding the user.',
-            icon: 'error',
-            confirmButtonText: 'Try Again'
+            title: "Error!",
+            text: "Something went wrong while adding the user.",
+            icon: "error",
+            confirmButtonText: "Try Again",
           });
         });
     } else if (formMode === "edit") {
@@ -53,23 +51,23 @@ function UserManagement() {
         .then(() => {
           // On success, show SweetAlert2 for updating user
           Swal.fire({
-            title: 'Success!',
-            text: 'User updated successfully.',
-            icon: 'success',
-            confirmButtonText: 'OK'
+            title: "Success!",
+            text: "User updated successfully.",
+            icon: "success",
+            confirmButtonText: "OK",
           });
         })
         .catch((error) => {
           // On error, show SweetAlert2 for error
           Swal.fire({
-            title: 'Error!',
-            text: 'Something went wrong while updating the user.',
-            icon: 'error',
-            confirmButtonText: 'Try Again'
+            title: "Error!",
+            text: "Something went wrong while updating the user.",
+            icon: "error",
+            confirmButtonText: "Try Again",
           });
         });
     }
-  
+
     // Reset the form fields after submit
     setCurrentUser({
       name: "",
@@ -78,41 +76,47 @@ function UserManagement() {
       status: "active",
       permissions: [],
     });
-  
+
     // Set form mode back to "add" after submission
     setFormMode("add");
   };
-  
-
 
   const handleEdit = (user) => {
-    setFormMode("edit");
-    setCurrentUser(user);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You are about to edit this user's details.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Go to form section",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setFormMode("edit");
+        setCurrentUser(user);
+      }
+    });
   };
 
   const handleDelete = (id) => {
     // Show SweetAlert2 confirmation dialog
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Once deleted, you will not be able to recover this user!',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this user!",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonText: 'Delete',
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
       reverseButtons: true, // Reverses the position of the Cancel and Confirm buttons
     }).then((result) => {
       if (result.isConfirmed) {
         // If the admin confirms, dispatch the action to delete the user
         dispatch(removeUser(id));
-  
+
         // Show success message
-        Swal.fire(
-          'Deleted!',
-          'The user has been deleted.',
-          'success'
-        );
+        Swal.fire("Deleted!", "The user has been deleted.", "success");
       }
     });
   };
@@ -139,6 +143,7 @@ function UserManagement() {
 
       <form
         onSubmit={handleSubmit}
+        id="userFormSection"
         className="bg-white shadow-xl rounded-lg p-8 space-y-6 max-w-lg mx-auto"
       >
         <div className="flex flex-col space-y-4">

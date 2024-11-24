@@ -37,16 +37,6 @@
       ]
     },
     {
-      "id": "57cb",
-      "name": "nazi",
-      "email": "nazi@gmail.com",
-      "role": "user",
-      "status": "active",
-      "permissions": [
-        "view"
-      ]
-    },
-    {
       "id": "716e",
       "name": "sufiya",
       "email": "sufiya@gmail.com",
@@ -128,7 +118,7 @@
     },
     {
       "id": "dffd",
-      "name": "jathin",
+      "name": "jathinn",
       "email": "jathin@gmail.com",
       "role": "user",
       "status": "active",
@@ -170,6 +160,16 @@
       "id": "656f",
       "name": "anuvvv",
       "email": "anuv@gmail.com",
+      "role": "user",
+      "status": "active",
+      "permissions": [
+        "view"
+      ]
+    },
+    {
+      "id": "9b84",
+      "name": "nazi",
+      "email": "nazi@gmail.com",
       "role": "user",
       "status": "active",
       "permissions": [

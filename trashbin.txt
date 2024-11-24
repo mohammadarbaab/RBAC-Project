@@ -1,3 +1,100 @@
+ // Set the user data to be edited
+ 
+// Add ID to target form section for scrolling
+ 
+
+  const handleEdit = (user) => {
+    setFormMode("edit");
+    setCurrentUser(user);
+  };
+ 
+// Function to handle page change
+ 
+/* Rounded corners for content */
+ 
+/* Subtle shadow */
+ 
+/* Restrict maximum width */
+ 
+/* Ensure content is above the designs */
+ 
+/* Lighter purple for bottom */
+ 
+* Purple shade for curve */
+ 
+/* Ensure no padding */
+ 
+/* Remove space on the left and right */
+ 
+ /* Prevent extra scroll from designs */
+ 
+ /* Full viewport height */
+ 
+/* Light purple background or customize as needed */
+ 
+// Dispatch the async thunk to fetch users
+ 
+
+
+  // Filter users based on search query
+  // useEffect(() => {
+  //   if (searchQuery === "") {
+  //     setFilteredUsers(users); // If no search query, show all users
+  //   } else {
+  //     setFilteredUsers(
+  //       users.filter((user) =>
+  //         user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  //       )
+  //     ); // Filter users by name
+  //   }
+  // }, [searchQuery, users]);
+ 
+// To handle error state
+ 
+// To handle loading state
+ 
+// Importing the spinner
+ 
+// Import your slice actions and selector
+ 
+// Access the usersList in the store
+
+ 
+// Store error message
+ 
+// Error state
+ 
+// Store data in the state
+ 
+// Reset to idle
+ 
+// Set loading status
+ 
+// Data we want to store in the Redux state
+ 
+
+  // { name: "Your Profile", link: "/profile" },
+  // { name: "My Orders", link: "/orders" },
+ 
+
+  // { name: "Dashboard", href: "#", current: true },
+  // { name: "Team", href: "#", current: false },
+  // { name: "Projects", href: "#", current: false },
+ 
+// Permissions as an empty array initially
+ 
+// Default status
+ 
+// Import SweetAlert2 at the top
+ 
+// Import auth slice
+ 
+// Import user slice
+ 
+ // Assign auth slice to 'auth' key
+ 
+// Assign user slice to 'user' key
+ 
   {currentItems.length > 0 ? (
             currentItems.map((user) => (
               <div

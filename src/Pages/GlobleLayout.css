@@ -1,54 +1,52 @@
+/* Main wrapper with background */
+.background-wrapper {
+  position: relative;
+  background: #f5f5fa; 
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin: 0; 
+  padding: 0; 
+}
 
-  
-  /* Main wrapper with background */
-  .background-wrapper {
-    position: relative;
-    background: #f5f5fa; /* Light purple background or customize as needed */
-    min-height: 100vh; /* Full viewport height */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; /* Prevent extra scroll from designs */
-    margin: 0; /* Remove space on the left and right */
-    padding: 0; /* Ensure no padding */
-  }
-  
-  /* Left-top curve design */
-  .curve-design {
-    position: absolute;
-    top: -50px;
-    left: -50px;
-    width: 200px;
-    height: 200px;
-    background: #9e77ed; /* Purple shade for curve */
-    /* border-radius: 50%;  */
-    z-index: 1;
-  }
-  
-  /* Right-bottom background design */
-  .background-wrapper::after {
-    content: "";
-    position: absolute;
-    bottom: -50px;
-    right: -50px;
-    width: 200px;
-    height: 200px;
-    background: #9e77ed; /* Lighter purple for bottom */
-    /* border-radius: 50%; */
-    z-index: 1;
-  }
-  
-  /* Content container */
-  .content {
-    position: relative;
-    z-index: 2; /* Ensure content is above the designs */
-    width: 95%;
-    max-width: 1200px; /* Restrict maximum width */
-    /* padding: 20px;  */
-    background: #ffffff;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    border-radius: 10px; /* Rounded corners for content */
+/* Left-top curve design */
+.curve-design {
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  width: 200px;
+  height: 200px;
+  background: #9e77ed; 
+  /* border-radius: 50%;  */
+  z-index: 1;
+}
 
-    margin-top: 30px;
-    margin-bottom: 30px;
-  }
+/* Right-bottom background design */
+.background-wrapper::after {
+  content: "";
+  position: absolute;
+  bottom: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: #9e77ed; 
+  /* border-radius: 50%; */
+  z-index: 1;
+}
+
+/* Content container */
+.content {
+  position: relative;
+  z-index: 2; 
+  width: 95%;
+  max-width: 1200px; 
+  /* padding: 20px;  */
+  background: #ffffff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
+  border-radius: 10px; 
+
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
