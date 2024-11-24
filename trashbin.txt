@@ -1,3 +1,66 @@
+ const handleDelete = (id) => {
+    dispatch(removeUser(id));
+  };
+ 
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  if (formMode === "add") {
+    dispatch(addUser(currentUser))
+      .then(() => {
+        Swal.fire({
+          title: 'Success!',
+          text: 'User added successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Something went wrong.',
+          icon: 'error',
+          confirmButtonText: 'Try Again'
+        });
+      });
+  } else {
+    dispatch(editUser({ id: currentUser.id, user: currentUser }));
+  }
+
+  setCurrentUser({
+    name: "",
+    email: "",
+    role: "",
+    status: "active",
+    permissions: [],
+  });
+  setFormMode("add");
+};
+ 
+
+
+  import Swal from 'sweetalert2'; // Import SweetAlert2 at the top
+ 
+const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (formMode === "add") {
+      dispatch(addUser(currentUser));
+    } else {
+      dispatch(editUser({ id: currentUser.id, user: currentUser }));
+    }
+
+    setCurrentUser({
+      name: "",
+      email: "",
+      role: "",
+      status: "active",
+      permissions: [],
+    });
+    setFormMode("add");
+  };
+ 
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       {/* Previous Button */}
       <button

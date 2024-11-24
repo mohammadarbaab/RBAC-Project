@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers, addUser, editUser, removeUser } from "../userSlice";
+import Swal from 'sweetalert2'; // Import SweetAlert2 at the top
+
 
 function UserManagement() {
   const dispatch = useDispatch();
@@ -23,13 +25,52 @@ function UserManagement() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     if (formMode === "add") {
-      dispatch(addUser(currentUser));
-    } else {
-      dispatch(editUser({ id: currentUser.id, user: currentUser }));
+      // Dispatch the action to add the user
+      dispatch(addUser(currentUser))
+        .then(() => {
+          // On success, show SweetAlert2 for adding user
+          Swal.fire({
+            title: 'Success!',
+            text: 'User added successfully.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+        })
+        .catch((error) => {
+          // On error, show SweetAlert2 for error
+          Swal.fire({
+            title: 'Error!',
+            text: 'Something went wrong while adding the user.',
+            icon: 'error',
+            confirmButtonText: 'Try Again'
+          });
+        });
+    } else if (formMode === "edit") {
+      // Dispatch the action to update the user
+      dispatch(editUser({ id: currentUser.id, user: currentUser }))
+        .then(() => {
+          // On success, show SweetAlert2 for updating user
+          Swal.fire({
+            title: 'Success!',
+            text: 'User updated successfully.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+        })
+        .catch((error) => {
+          // On error, show SweetAlert2 for error
+          Swal.fire({
+            title: 'Error!',
+            text: 'Something went wrong while updating the user.',
+            icon: 'error',
+            confirmButtonText: 'Try Again'
+          });
+        });
     }
-
+  
+    // Reset the form fields after submit
     setCurrentUser({
       name: "",
       email: "",
@@ -37,8 +78,12 @@ function UserManagement() {
       status: "active",
       permissions: [],
     });
+  
+    // Set form mode back to "add" after submission
     setFormMode("add");
   };
+  
+
 
   const handleEdit = (user) => {
     setFormMode("edit");
@@ -46,7 +91,30 @@ function UserManagement() {
   };
 
   const handleDelete = (id) => {
-    dispatch(removeUser(id));
+    // Show SweetAlert2 confirmation dialog
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Once deleted, you will not be able to recover this user!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      reverseButtons: true, // Reverses the position of the Cancel and Confirm buttons
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // If the admin confirms, dispatch the action to delete the user
+        dispatch(removeUser(id));
+  
+        // Show success message
+        Swal.fire(
+          'Deleted!',
+          'The user has been deleted.',
+          'success'
+        );
+      }
+    });
   };
 
   const handlePermissionChange = (e) => {
@@ -69,104 +137,104 @@ function UserManagement() {
         User Management
       </h2>
 
-
       <form
-  onSubmit={handleSubmit}
-  className="bg-white shadow-xl rounded-lg p-8 space-y-6 max-w-lg mx-auto"
->
-  <div className="flex flex-col space-y-4">
-    {/* Name Input */}
-    <input
-      type="text"
-      placeholder="Name"
-      value={currentUser.name}
-      onChange={(e) =>
-        setCurrentUser({ ...currentUser, name: e.target.value })
-      }
-      className="px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
-    />
-
-    {/* Email Input */}
-    <input
-      type="email"
-      placeholder="Email"
-      value={currentUser.email}
-      onChange={(e) =>
-        setCurrentUser({ ...currentUser, email: e.target.value })
-      }
-      className="px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
-    />
-
-    {/* Role Select */}
-    <select
-      value={currentUser.role}
-      onChange={(e) =>
-        setCurrentUser({ ...currentUser, role: e.target.value })
-      }
-      className="px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
-    >
-      <option value="">Select Role</option>
-      <option value="user">User</option>
-      <option value="admin">Admin</option>
-    </select>
-
-    {/* Status Select */}
-    <select
-      value={currentUser.status}
-      onChange={(e) =>
-        setCurrentUser({ ...currentUser, status: e.target.value })
-      }
-      className="px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
-    >
-      <option value="active">Active</option>
-      <option value="inactive">Inactive</option>
-    </select>
-
-    {/* Permissions Section */}
-    <div>
-      <h3 className="text-xl font-semibold text-gray-700 mb-2">Permissions</h3>
-      <div className="space-y-3">
-        <label className="flex items-center space-x-2 text-gray-700">
+        onSubmit={handleSubmit}
+        className="bg-white shadow-xl rounded-lg p-8 space-y-6 max-w-lg mx-auto"
+      >
+        <div className="flex flex-col space-y-4">
+          {/* Name Input */}
           <input
-            type="checkbox"
-            value="view"
-            checked={currentUser.permissions.includes("view")}
-            onChange={handlePermissionChange}
-            className="h-5 w-5 text-indigo-500 focus:ring-2 focus:ring-indigo-500"
+            type="text"
+            placeholder="Name"
+            value={currentUser.name}
+            onChange={(e) =>
+              setCurrentUser({ ...currentUser, name: e.target.value })
+            }
+            className="px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
           />
-          <span className="text-lg">View</span>
-        </label>
-        {/* Add more permission checkboxes here */}
-      </div>
-    </div>
-  </div>
 
-  {/* Submit Button */}
-  <button
-    type="submit"
-    className={`w-full py-3 rounded-lg text-white font-semibold transition duration-300 ease-in-out transform ${
-      currentUser.name &&
-      currentUser.email &&
-      currentUser.role &&
-      currentUser.status &&
-      currentUser.permissions.length > 0
-        ? "bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-500"
-        : "bg-gray-300 text-gray-500 cursor-not-allowed"
-    }`}
-    disabled={
-      !(
-        currentUser.name &&
-        currentUser.email &&
-        currentUser.role &&
-        currentUser.status &&
-        currentUser.permissions.length > 0
-      )
-    }
-  >
-    {formMode === "add" ? "Add User" : "Update User"}
-  </button>
-</form>
+          {/* Email Input */}
+          <input
+            type="email"
+            placeholder="Email"
+            value={currentUser.email}
+            onChange={(e) =>
+              setCurrentUser({ ...currentUser, email: e.target.value })
+            }
+            className="px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
+          />
 
+          {/* Role Select */}
+          <select
+            value={currentUser.role}
+            onChange={(e) =>
+              setCurrentUser({ ...currentUser, role: e.target.value })
+            }
+            className="px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
+          >
+            <option value="">Select Role</option>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+
+          {/* Status Select */}
+          <select
+            value={currentUser.status}
+            onChange={(e) =>
+              setCurrentUser({ ...currentUser, status: e.target.value })
+            }
+            className="px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
+          >
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+
+          {/* Permissions Section */}
+          <div>
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              Permissions
+            </h3>
+            <div className="space-y-3">
+              <label className="flex items-center space-x-2 text-gray-700">
+                <input
+                  type="checkbox"
+                  value="view"
+                  checked={currentUser.permissions.includes("view")}
+                  onChange={handlePermissionChange}
+                  className="h-5 w-5 text-indigo-500 focus:ring-2 focus:ring-indigo-500"
+                />
+                <span className="text-lg">View</span>
+              </label>
+              {/* Add more permission checkboxes here */}
+            </div>
+          </div>
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className={`w-full py-3 rounded-lg text-white font-semibold transition duration-300 ease-in-out transform ${
+            currentUser.name &&
+            currentUser.email &&
+            currentUser.role &&
+            currentUser.status &&
+            currentUser.permissions.length > 0
+              ? "bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-500"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          }`}
+          disabled={
+            !(
+              currentUser.name &&
+              currentUser.email &&
+              currentUser.role &&
+              currentUser.status &&
+              currentUser.permissions.length > 0
+            )
+          }
+        >
+          {formMode === "add" ? "Add User" : "Update User"}
+        </button>
+      </form>
 
       {status === "loading" && (
         <p className="text-center text-gray-500 mt-4">Loading...</p>
